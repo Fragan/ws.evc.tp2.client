@@ -4,7 +4,6 @@ import j3d.object.VirtualObject;
 
 
 //  La 3d
-public class PObject {
+public class PObject extends VirtualObject {
 
-	private VirtualObject vObject;
 }

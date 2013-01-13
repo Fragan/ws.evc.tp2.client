@@ -7,9 +7,6 @@ import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Vector3d;
 
-
-
-import com.sun.corba.se.impl.ior.OldPOAObjectKeyTemplate;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
 public class SharedUniverse extends SimpleUniverse {

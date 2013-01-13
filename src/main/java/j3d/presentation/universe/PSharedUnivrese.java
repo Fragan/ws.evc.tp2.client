@@ -1,5 +1,11 @@
 package j3d.presentation.universe;
 
+import j3d.controller.universe.CSharedUniverse;
+import ihm.app.CanvasLoader;
+
+import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
+
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
 public class PSharedUnivrese extends SimpleUniverse {
@@ -13,4 +19,28 @@ public class PSharedUnivrese extends SimpleUniverse {
 	 * setangle qui s'occupera de modifier l'ange sur l'abstraction et aussi sur la présentation
 	 */
 
+	private CSharedUniverse controller;
+	private PCamera camera;
+	
+	public PSharedUnivrese(CSharedUniverse controller, PCamera transCamera, TransformGroup scene) {
+		super();
+		this.controller = controller;
+		getViewer().getView().setSceneAntialiasingEnable(true); // Yeah !!
+		this.camera = transCamera;
+	}
+
+	public PSharedUnivrese(CSharedUniverse controller, CanvasLoader canvas) {
+		super(canvas);
+		this.controller = controller;
+		getViewer().getView().setSceneAntialiasingEnable(true); // Yeah !!
+		camera = (PCamera) canvas.getVpTrans();
+	}
+	
+	public void getCameraTransform(Transform3D t3D) {
+		camera.getTransform(t3D);
+	}
+	
+	public void setCameraTransform(Transform3D t3D) {
+		camera.setTransform(t3D);
+	}
 }
