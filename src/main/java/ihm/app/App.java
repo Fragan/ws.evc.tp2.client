@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -12,33 +13,39 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class App extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private CanvasLoader canvas;
+	private CanvasExtended canvas;
 	private CameraControlsPanel cp;
 
 
 	public App() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		String ownerPseudo = JOptionPane.showInputDialog(null, "Type your pseudo : ");
+		if (ownerPseudo == null) {
+			System.exit(0);
+		}
+			
+		
 		//Initialize elements
 		cp = new CameraControlsPanel();
-		canvas = new CanvasLoader();
+		canvas = new CanvasExtended(ownerPseudo);
 		
 		//AddListener to camera controls panel
 		cp.getTeleportToButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				canvas.getUniverse().cameraTeleportTo(cp.getCoordX(), cp.getCoordY(), cp.getCoordZ()); 
+				canvas.getCamera().teleportTo(cp.getCoordX(), cp.getCoordY(), cp.getCoordZ()); 
 			}
 		});
 		
 		//Add Listener to camera rotation mode
 		cp.getRbNormalMCR().addActionListener(new ActionListener() {			
 			public void actionPerformed(ActionEvent arg0) {			
-				canvas.getUniverse().setModeCameraRotationScene(false);
+				canvas.getCamera().setModeCameraRotationScene(false);
 			}
 		});
 		cp.getRbSceneMCR().addActionListener(new ActionListener() {			
 			public void actionPerformed(ActionEvent arg0) {			
-				canvas.getUniverse().setModeCameraRotationScene(true);
+				canvas.getCamera().setModeCameraRotationScene(true);
 			}
 		});
 		

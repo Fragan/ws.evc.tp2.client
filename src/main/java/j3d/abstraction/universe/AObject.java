@@ -1,5 +1,6 @@
 package j3d.abstraction.universe;
 
+import javax.media.j3d.Transform3D;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
@@ -15,6 +16,8 @@ public class AObject {
 	public AObject(String name, String urlGeometry) {
 		this.name = name;
 		this.urlGeometry = urlGeometry;
+		this.orientation = new Quat4d();
+		this.position = new Vector3d();
 	}
 
 	public Vector3d getPosition() {
@@ -39,5 +42,9 @@ public class AObject {
 
 	public String getURLGeometry() {
 		return urlGeometry;
+	}
+	
+	public void setTransform(Transform3D t3d) {
+		t3d.get(orientation, position);
 	}
 }

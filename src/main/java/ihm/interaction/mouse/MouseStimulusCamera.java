@@ -40,7 +40,7 @@ public class MouseStimulusCamera extends AMouseStimulusState {
 				} else if (events[i].getID() == MouseEvent.MOUSE_RELEASED) {
 					msd.buttonsInUse--;
 					if (msd.buttonsInUse == 0) {
-						msd.objectInInteraction = null;
+						msd.cObjectInInteraction = null;
 					}
 					if (((MouseEvent) events[i]).getButton() == MouseEvent.BUTTON1) {
 						msd.button1Pressed = false;
@@ -74,15 +74,15 @@ public class MouseStimulusCamera extends AMouseStimulusState {
 							dy = (msd.y1 - msd.y2) / 40.0;
 						}
 					}
-					msd.sharedUniverse.cameraRelativeTranslate(-dx, -dy, dz);
-					msd.sharedUniverse.cameraRelativeRotate(dh, dp, dr);
+					msd.cCamera.relativeTranslate(-dx, -dy, dz);
+					msd.cCamera.relativeRotate(dh, dp, dr);
 					msd.x1 = msd.x2;
 					msd.y1 = msd.y2;
 				} else if (events[i].getID() == MouseEvent.MOUSE_WHEEL) {
 					MouseWheelEvent event = (MouseWheelEvent) events[i];
 					int rotates = event.getWheelRotation();
 					double dz = rotates;
-					msd.sharedUniverse.cameraRelativeTranslate(0, 0, dz);
+					msd.cCamera.relativeTranslate(0, 0, dz);
 
 				}
 			}

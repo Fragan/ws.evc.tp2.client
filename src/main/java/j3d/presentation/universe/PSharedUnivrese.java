@@ -1,9 +1,8 @@
 package j3d.presentation.universe;
 
 import j3d.controller.universe.CSharedUniverse;
-import ihm.app.CanvasLoader;
 
-import javax.media.j3d.Transform3D;
+import javax.media.j3d.Canvas3D;
 import javax.media.j3d.TransformGroup;
 
 import com.sun.j3d.utils.universe.SimpleUniverse;
@@ -20,27 +19,32 @@ public class PSharedUnivrese extends SimpleUniverse {
 	 */
 
 	private CSharedUniverse controller;
-	private PCamera camera;
+	private TransformGroup tgCamera;
 	
-	public PSharedUnivrese(CSharedUniverse controller, PCamera transCamera, TransformGroup scene) {
-		super();
+	public PSharedUnivrese(CSharedUniverse controller, Canvas3D canvas) {
+		super(canvas);
+		getViewingPlatform().setNominalViewingTransform();
 		this.controller = controller;
 		getViewer().getView().setSceneAntialiasingEnable(true); // Yeah !!
-		this.camera = transCamera;
+		
+		
+		//Create a user camera
+		tgCamera = getViewingPlatform().getViewPlatformTransform(); 
+		try {
+			tgCamera.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		} catch (Exception e) {
+		}
+	
 	}
 
-	public PSharedUnivrese(CSharedUniverse controller, CanvasLoader canvas) {
-		super(canvas);
-		this.controller = controller;
-		getViewer().getView().setSceneAntialiasingEnable(true); // Yeah !!
-		camera = (PCamera) canvas.getVpTrans();
+	public CSharedUniverse getController() {
+		return controller;
+	}
+
+	public TransformGroup getTransformgroupCamera() {
+		return tgCamera;
 	}
 	
-	public void getCameraTransform(Transform3D t3D) {
-		camera.getTransform(t3D);
-	}
 	
-	public void setCameraTransform(Transform3D t3D) {
-		camera.setTransform(t3D);
-	}
+	
 }

@@ -13,6 +13,8 @@ public class ACamera {
 	
 	public ACamera(String ownerName) {
 		this.ownerName = ownerName;
+		this.orientation = new Quat4d();
+		this.position = new Vector3d();
 	}
 
 	public String getOwnerName() {

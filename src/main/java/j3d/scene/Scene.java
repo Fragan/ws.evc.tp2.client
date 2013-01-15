@@ -13,10 +13,10 @@ import javax.vecmath.Vector3f;
  * Presentation et controller
  *
  */
-public class Scene {
+public class Scene extends BranchGroup {
 
-	public static BranchGroup createDefaultScene() {
-		BranchGroup objRoot = new BranchGroup();
+	public static Scene createDefaultScene() {
+		Scene objRoot = new Scene();
 
 		Color3f directionalColor = new Color3f(1.0f, 1.0f, 1.0f);
 		Color3f ambientColor = new Color3f(0.9f, 0.9f, 0.9f);

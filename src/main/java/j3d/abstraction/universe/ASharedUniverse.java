@@ -4,12 +4,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.media.j3d.Transform3D;
-
 public class ASharedUniverse {
 
-	Map<String, AObject> objects;
-	Map<String, ACamera> cameras;
+	private Map<String, AObject> objects;
+	private Map<String, ACamera> cameras;
 	
 	public ASharedUniverse() {
 		objects = new HashMap<String, AObject>();
@@ -20,57 +18,33 @@ public class ASharedUniverse {
 		return objects.values();
 	}
 	
-	public void addObjects(Collection<AObject> objects) {
-		for (AObject object: objects) {
-			if (getObject(object.getName()) != null) {
-				// TODO : presntation interaction
-				System.err.println("The object " + object.getName() + " already included in the universe");
-			}
-			else {
-				this.objects.put(object.getName(), object);
-			}
-		}
-	}
 	
 	public Collection<ACamera> getCameras() {
 		return cameras.values();
 	}
 	
-	public void addCameras(Collection<ACamera> cameras) {
-		for (ACamera camera: cameras) {
-			if (getObject(camera.getOwnerName()) != null) {
-				// TODO : presntation interaction
-				System.err.println("The camera " + camera.getOwnerName() + " already included in the universe");
-			}
-			else {
-				this.cameras.put(camera.getOwnerName(), camera);
-			}
-		}
-		addCameras(cameras);
-	}
+
 	
-	public void add(AObject object) {
-		if (getObject(object.getName()) != null) {
-			// TODO : presntation interaction
+	public boolean add(AObject object) {
+		if (getObject(object.getName()) != null) {			
 			System.err.println("The object " + object.getName() + " already included in the universe");
+			return false;
 		}
-		else {
-			objects.put(object.getName(), object);
-		}
+		objects.put(object.getName(), object);
+		return true;
 	}
 	
 	public void remove(AObject object) {
 		objects.remove(object.getName());
 	}
 	
-	public void add(ACamera camera) {
-		if (getObject(camera.getOwnerName()) != null) {
-			// TODO : presntation interaction
+	public boolean add(ACamera camera) {
+		if (getObject(camera.getOwnerName()) != null) {			
 			System.err.println("The camera " + camera.getOwnerName() + " already included in the universe");
+			return false;
 		}
-		else {
-			cameras.put(camera.getOwnerName(), camera);
-		}
+		cameras.put(camera.getOwnerName(), camera);
+		return true;
 	}
 	
 	public void remove(ACamera camera) {
@@ -85,7 +59,4 @@ public class ASharedUniverse {
 		return cameras.get(name);
 	}
 
-	public void setCameraTransform(String ownerName, Transform3D t3D) {
-		cameras.get(ownerName).setTransform(t3D);
-	}
 }

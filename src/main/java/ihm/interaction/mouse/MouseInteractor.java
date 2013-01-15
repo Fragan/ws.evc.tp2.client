@@ -1,20 +1,18 @@
 package ihm.interaction.mouse;
 
-import j3d.universe.*;
+import j3d.controller.universe.CCamera;
+import j3d.controller.universe.CObject;
+import j3d.scene.Scene;
 
 import java.awt.AWTEvent;
 import java.util.Enumeration;
 
 import javax.media.j3d.Behavior;
-import javax.media.j3d.BranchGroup;
-import javax.media.j3d.TransformGroup;
-import javax.media.j3d.VirtualUniverse;
 import javax.media.j3d.WakeupCriterion;
 import javax.media.j3d.WakeupOnAWTEvent;
 import javax.media.j3d.WakeupOr;
 
 
-@SuppressWarnings("unused")
 public class MouseInteractor extends Behavior {
 
 		
@@ -24,16 +22,15 @@ public class MouseInteractor extends Behavior {
 		public boolean button1Pressed;
 		public boolean button2Pressed;
 		public boolean button3Pressed;
-		public TransformGroup objectInInteraction;
+		public CObject cObjectInInteraction;
 		
-		public SharedUniverse sharedUniverse;
 		public int x1;
 		public int x2;
 		public int y1;
 		public int y2;
 		
-		public BranchGroup branch;
-		public TransformGroup viewPoint;
+		public Scene scene;
+		public CCamera cCamera;
 		public WakeupOr wEvents;
 		
 	};
@@ -41,12 +38,11 @@ public class MouseInteractor extends Behavior {
 	private MouseInteractorData msd;
 	private AMouseStimulusState currentState;
 
-	public MouseInteractor(SharedUniverse sharedUniverse, BranchGroup branch, TransformGroup viewPoint) {
+	public MouseInteractor(Scene scene, CCamera cCamera) {
 		msd = new MouseInteractorData();		
 		currentState = new MouseStimulusObject(msd);
-		msd.branch = branch;
-		msd.viewPoint = viewPoint;
-		msd.sharedUniverse = sharedUniverse;
+		msd.scene = scene;
+		msd.cCamera = cCamera;
 	}
 
 	

@@ -1,6 +1,7 @@
 package ihm.interaction.mouse;
 
 import ihm.interaction.mouse.MouseInteractor.MouseInteractorData;
+import j3d.presentation.universe.PObject;
 
 import java.awt.AWTEvent;
 import java.awt.event.MouseEvent;
@@ -8,7 +9,6 @@ import java.awt.event.MouseWheelEvent;
 import java.util.Enumeration;
 
 import javax.media.j3d.Canvas3D;
-import javax.media.j3d.TransformGroup;
 import javax.media.j3d.WakeupOnAWTEvent;
 
 import com.sun.j3d.utils.picking.PickCanvas;
@@ -44,7 +44,7 @@ public class MouseStimulusObject extends AMouseStimulusState {
 				} else if (events[i].getID() == MouseEvent.MOUSE_RELEASED) {
 					msd.buttonsInUse--;
 					if (msd.buttonsInUse == 0) {
-						msd.objectInInteraction = null;
+						msd.cObjectInInteraction = null;
 					}
 					if (((MouseEvent) events[i]).getButton() == MouseEvent.BUTTON1) {
 						msd.button1Pressed = false;
@@ -56,7 +56,7 @@ public class MouseStimulusObject extends AMouseStimulusState {
 						msd.button3Pressed = false;
 					}
 				} else if (events[i].getID() == MouseEvent.MOUSE_DRAGGED) {
-					if (msd.objectInInteraction != null) {
+					if (msd.cObjectInInteraction != null) {
 						double dx = 0, dy = 0, dz = 0;
 						double dh = 0, dp = 0, dr = 0;
 						msd.x2 = ((MouseEvent) events[i]).getX();
@@ -64,30 +64,30 @@ public class MouseStimulusObject extends AMouseStimulusState {
 						if (msd.button1Pressed) { // rotation
 							dh = (msd.x2 - msd.x1) /3.0;
 							dp = (msd.y1 - msd.y2) / 3.0;
-							msd.sharedUniverse.objectRotate(msd.objectInInteraction, dh, dp, dr);
+							msd.cObjectInInteraction.rotate(dh, dp, dr);
 						}
 						if (msd.button2Pressed ) { // zoom
 							dz = (msd.x1 - msd.x2 + msd.y2 - msd.y1) / 40.0;
-							msd.sharedUniverse.objectTranslate(msd.objectInInteraction, dx, dy, dz);
+							msd.cObjectInInteraction.translate(dx, dy, dz);
 						}
 						if (msd.button3Pressed) { // translation dans le plan de
 												// l'�cran
 							dx = (msd.x2 - msd.x1) / 40.0;
 							dy = (msd.y1 - msd.y2) / 40.0;
-							msd.sharedUniverse.objectTranslate(msd.objectInInteraction, dx, dy, dz);
+							msd.cObjectInInteraction.translate( dx, dy, dz);
 						}
 						
 						msd.x1 = msd.x2;
 						msd.y1 = msd.y2;
 					}
 				 } else if (events[i].getID() == MouseEvent.MOUSE_WHEEL) {
-					 msd.objectInInteraction = null; //Otherwise, the scroll continue to interact with the object with the cursor outside of it.
+					 msd.cObjectInInteraction = null; //Otherwise, the scroll continue to interact with the object with the cursor outside of it.
 					 tryToPickUpObjectInInteraction((MouseEvent) events[i]);
-					 if (msd.objectInInteraction != null) {
+					 if (msd.cObjectInInteraction != null) {
 						 MouseWheelEvent event = (MouseWheelEvent) events[i];
 						 int rotates = event.getWheelRotation();
 						 double dz = rotates;
-						 msd.sharedUniverse.objectTranslate(msd.objectInInteraction, 0, 0, dz);
+						 msd.cObjectInInteraction.translate(0, 0, dz);
 					 }
 				 }
 				
@@ -98,15 +98,15 @@ public class MouseStimulusObject extends AMouseStimulusState {
 	
 	private void tryToPickUpObjectInInteraction(MouseEvent e) {
 		PickCanvas pickShape = new PickCanvas(
-				(Canvas3D) e.getSource(), msd.branch);
+				(Canvas3D) e.getSource(), msd.scene);
 		pickShape.setShapeLocation((MouseEvent) e);
 		msd.x1 = e.getX();
 		msd.y1 = e.getY();
 		PickResult[] sgPath = pickShape.pickAllSorted();
 		if (sgPath != null) {
 			try {
-				msd.objectInInteraction = (TransformGroup) sgPath[0]
-						.getNode(PickResult.TRANSFORM_GROUP);
+				msd.cObjectInInteraction = ((PObject) sgPath[0]
+						.getNode(PickResult.TRANSFORM_GROUP)).getController();
 			} catch (Exception ex) {
 				System.out.println(ex);
 			}

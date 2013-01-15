@@ -1,6 +1,6 @@
 package ihm.interaction.keyboard;
 
-import ihm.app.CanvasLoader;
+import ihm.app.CanvasExtended;
 import ihm.interaction.mouse.MouseInteractor;
 
 
@@ -12,8 +12,8 @@ import java.awt.event.KeyListener;
 public class KeyCameraStateForMouseInteractor implements KeyListener {
 
 	private MouseInteractor mi;
-	private CanvasLoader cl;
-	public KeyCameraStateForMouseInteractor(CanvasLoader cl, MouseInteractor mi) {
+	private CanvasExtended cl;
+	public KeyCameraStateForMouseInteractor(CanvasExtended cl, MouseInteractor mi) {
 		this.cl = cl;
 		this.mi = mi;		
 	}

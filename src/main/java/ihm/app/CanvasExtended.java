@@ -4,103 +4,78 @@ import ihm.interaction.keyboard.KeyCameraStateForMouseInteractor;
 import ihm.interaction.mouse.MouseInteractor;
 import ihm.interaction.mouse.MouseStimulusCamera;
 import ihm.interaction.mouse.MouseStimulusObject;
-
-import j3d.loader.GenericVrmlLoader;
-import j3d.scene.Scene;
-import j3d.universe.SharedUniverse;
+import j3d.controller.universe.CCamera;
+import j3d.controller.universe.CObject;
+import j3d.controller.universe.CSharedUniverse;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
 import javax.media.j3d.BoundingSphere;
-import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.J3DGraphics2D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Point3d;
 
-
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
-public class CanvasLoader extends Canvas3D {
+public class CanvasExtended extends Canvas3D {
 
 	private static final long serialVersionUID = 1L;
-	private GenericVrmlLoader gvl;
-	private SharedUniverse universe;
-	private TransformGroup camera;
-	private BranchGroup scene;
+	private CSharedUniverse universe;
+	
 	private MouseInteractor mouseInteractor;
+	private CCamera camera;
 
-	public CanvasLoader() {
+	public CanvasExtended(String ownerName) {
 		super(SimpleUniverse.getPreferredConfiguration());
 		setDoubleBufferEnable(true);
 		
-		//Create the scene
-		scene = Scene.createDefaultScene();
+		//universe = new 
 
 		//Load a vrml model
-		gvl = new GenericVrmlLoader("samples/colorcube2.wrl");
-		TransformGroup cube = gvl.load();
-		TransformGroup cube2 = gvl.load();
 		
-		//Add object into scene
-		scene.addChild(cube);
-		scene.addChild(cube2);
-
+		CObject cube = new CObject(ownerName + "CubeObject", "http://espacezives.free.fr/colorcube2.wrl");
+		CObject cube2 = new CObject(ownerName + "Cube2Object", "http://espacezives.free.fr/colorcube2.wrl");
+		
 		//Create a universe
-		universe = new SharedUniverse(this);
-		universe.getViewingPlatform().setNominalViewingTransform();
-
-		//Create a user camera
-		camera = universe.getViewingPlatform().getViewPlatformTransform(); 
-		try {
-			camera.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-		} catch (Exception e) {
-		}
-
-		//Assign camera to universe
-		universe.setTransCamera(camera);
+		universe = new CSharedUniverse(ownerName, this);
+		
+		universe.add(cube);
+		universe.add(cube2);
+		
+		TransformGroup tgCamera = universe.getPresentation().getTransformgroupCamera();
+		camera = new CCamera(ownerName, tgCamera);
+		camera.relativeTranslate(0, 0, 5.0); 
+		universe.add(camera);
 
 		//Add a mouse interactor to the scene
-		mouseInteractor = new MouseInteractor(universe, scene, camera);
+		mouseInteractor = new MouseInteractor(universe.getScene(), camera);
 		mouseInteractor.setSchedulingBounds(new BoundingSphere(new Point3d(),
 				1000.0));
-		scene.addChild(mouseInteractor);
+		universe.addMouseInteractor(mouseInteractor);
 
 		//Add a keylistener to the canvas
 		addKeyListener(new KeyCameraStateForMouseInteractor(this, getMouseInteractor()));
 	
 		//Compile the scene
-		scene.compile();
-		
-		//Add the scene to the universe
-		universe.addBranchGraph(scene);
-		
-		//Finally, taking a step back
-		universe.cameraRelativeTranslate(0, 0, 5.0); 
-	
-		
+		universe.compileScene();
+
 	}
 
 
 	public MouseInteractor getMouseInteractor() {
 		return mouseInteractor;
 	}
-
-	public TransformGroup getVpTrans() {
+		
+	public CCamera getCamera() {
 		return camera;
 	}
 
-	public SharedUniverse getUniverse() {
-		return universe;
-	}
 
-	
-	
 	@Override
 	public void update(Graphics g) {
-		// TODO Auto-generated method stub
 		super.update(g);
 	}
 
