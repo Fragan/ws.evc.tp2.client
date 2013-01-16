@@ -5,10 +5,11 @@ import ihm.interaction.mouse.MouseInteractor;
 import j3d.abstraction.universe.ACamera;
 import j3d.abstraction.universe.AObject;
 import j3d.abstraction.universe.ASharedUniverse;
+import j3d.interfaces.universe.ISharedUniverse;
 import j3d.presentation.universe.PSharedUnivrese;
 import j3d.scene.Scene;
 
-public class CSharedUniverse extends ASharedUniverse {
+public class CSharedUniverse extends ASharedUniverse implements ISharedUniverse {
 
 	private String ownerName; // The same name as ACamera
 	private Scene scene;
@@ -50,7 +51,8 @@ public class CSharedUniverse extends ASharedUniverse {
 		}
 		super.remove(object);
 	}
-
+	
+	
 
 	@Override
 	public boolean add(ACamera camera) {

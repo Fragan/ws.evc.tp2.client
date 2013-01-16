@@ -1,13 +1,14 @@
 package j3d.controller.universe;
 
+import j3d.abstraction.universe.ACamera;
+import j3d.interfaces.universe.ICamera;
+import j3d.presentation.universe.PCamera;
+
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Vector3d;
 
-import j3d.abstraction.universe.ACamera;
-import j3d.presentation.universe.PCamera;
-
-public class CCamera extends ACamera {
+public class CCamera extends ACamera implements ICamera  {
 
 	private PCamera presentation;
 	private boolean modeCameraRotationScene;

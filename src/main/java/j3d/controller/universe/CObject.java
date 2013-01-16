@@ -1,6 +1,7 @@
 package j3d.controller.universe;
 
 import j3d.abstraction.universe.AObject;
+import j3d.interfaces.universe.IObject;
 import j3d.presentation.universe.PObject;
 
 import javax.media.j3d.Transform3D;
@@ -9,7 +10,7 @@ import javax.vecmath.Vector3d;
 import tools.Downloader;
 
 // controle les interactions
-public class CObject extends AObject {
+public class CObject extends AObject implements IObject {
 	
 	private PObject presentation;
 	
