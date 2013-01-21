@@ -24,6 +24,8 @@ public class App extends JFrame {
 		if (ownerPseudo == null) {
 			System.exit(0);
 		}
+		
+		
 			
 		
 		//Initialize elements

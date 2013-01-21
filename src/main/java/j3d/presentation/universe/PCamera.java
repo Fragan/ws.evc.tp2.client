@@ -19,6 +19,8 @@ public class PCamera extends TransformGroup {
 	public PCamera(CCamera cCamera, TransformGroup tgCamera) {
 		controller = cCamera;
 		realTgCamera = tgCamera;
+		if (realTgCamera == null)
+			realTgCamera = new TransformGroup();
 	}
 	
 	public CCamera getController() {

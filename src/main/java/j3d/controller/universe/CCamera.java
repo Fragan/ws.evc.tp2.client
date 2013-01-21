@@ -1,20 +1,21 @@
 package j3d.controller.universe;
 
-import j3d.abstraction.universe.ACamera;
 import j3d.interfaces.universe.ICamera;
 import j3d.presentation.universe.PCamera;
 
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
+import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
-public class CCamera extends ACamera implements ICamera  {
+public class CCamera implements ICamera  {
 
 	private PCamera presentation;
+	private ICamera abstraction;
 	private boolean modeCameraRotationScene;
 	
-	public CCamera(String ownerName, TransformGroup tgCamera) {
-		super(ownerName);
+	public CCamera(ICamera abstraction, TransformGroup tgCamera) {
+		this.abstraction = abstraction;
 		modeCameraRotationScene = false;
 		presentation = new PCamera(this, tgCamera);
 	}
@@ -90,5 +91,35 @@ public class CCamera extends ACamera implements ICamera  {
 	
 	public PCamera getPresentation() {
 		return presentation;
+	}
+
+	@Override
+	public String getOwnerName() {
+		return abstraction.getOwnerName();
+	}
+
+	@Override
+	public Vector3d getPosition() {
+		return abstraction.getPosition();
+	}
+
+	@Override
+	public void setPosition(Vector3d position) {
+		abstraction.setPosition(position);
+	}
+
+	@Override
+	public Quat4d getOrientation() {
+		return abstraction.getOrientation();
+	}
+
+	@Override
+	public void setOrientation(Quat4d orientation) {
+		abstraction.setOrientation(orientation);
+	}
+
+	@Override
+	public void setTransform(Transform3D t3d) {
+		abstraction.setTransform(t3d);
 	}
 }

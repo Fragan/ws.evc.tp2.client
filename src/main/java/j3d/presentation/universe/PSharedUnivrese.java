@@ -1,6 +1,9 @@
 package j3d.presentation.universe;
 
+import java.awt.Component;
+
 import j3d.controller.universe.CSharedUniverse;
+import j3d.scene.Scene;
 
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.TransformGroup;
@@ -20,13 +23,15 @@ public class PSharedUnivrese extends SimpleUniverse {
 
 	private CSharedUniverse controller;
 	private TransformGroup tgCamera;
+	Scene scene ;
 	
 	public PSharedUnivrese(CSharedUniverse controller, Canvas3D canvas) {
 		super(canvas);
 		getViewingPlatform().setNominalViewingTransform();
 		this.controller = controller;
+		this.scene = Scene.createDefaultScene();
 		getViewer().getView().setSceneAntialiasingEnable(true); // Yeah !!
-		
+		addBranchGraph(scene);
 		
 		//Create a user camera
 		tgCamera = getViewingPlatform().getViewPlatformTransform(); 
@@ -43,6 +48,30 @@ public class PSharedUnivrese extends SimpleUniverse {
 
 	public TransformGroup getTransformgroupCamera() {
 		return tgCamera;
+	}
+	
+	public void add(PCamera camera) {
+		scene.addChild(camera);
+	}
+	
+	public void add(PObject object) {
+		scene.addChild(object);
+	}
+	
+	public void remove(PCamera camera) {
+		scene.removeChild(camera);
+	}
+	
+	public void remove(PObject object) {
+		scene.removeChild(object);
+	}
+	
+	public void compile() {		
+		scene.compile();
+	}
+
+	public Scene getScene() {
+		return scene;
 	}
 	
 	

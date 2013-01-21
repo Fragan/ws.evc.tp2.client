@@ -5,23 +5,25 @@ import j3d.interfaces.universe.IObject;
 import j3d.presentation.universe.PObject;
 
 import javax.media.j3d.Transform3D;
+import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
 import tools.Downloader;
 
 // controle les interactions
-public class CObject extends AObject implements IObject {
+public class CObject implements IObject {
 	
 	private PObject presentation;
+	private IObject abstraction;
 	
-	public CObject(String name, String urlGeometry) {
-		super(name, urlGeometry);		
-		
-		if (urlGeometry.startsWith("http")) {
-			urlGeometry = Downloader.donwloadFile(urlGeometry, false);
+	public CObject(IObject abstraction) {
+		this.abstraction = abstraction;
+		String userUrl = abstraction.getURLGeometry();
+		if (userUrl.startsWith("http")) {
+			userUrl = Downloader.donwloadFile(userUrl, false);
 		}
 	
-		presentation = new PObject(this, urlGeometry);
+		presentation = new PObject(this, userUrl);
 	}
 	
 	/*public void rotateTo(double h, double d, double r) {
@@ -84,6 +86,41 @@ public class CObject extends AObject implements IObject {
 	
 	public PObject getPresentation() {
 		return presentation;
+	}
+
+	@Override
+	public Vector3d getPosition() {
+		return abstraction.getPosition();
+	}
+
+	@Override
+	public void setPosition(Vector3d position) {
+		abstraction.setPosition(position);
+	}
+
+	@Override
+	public Quat4d getOrientation() {
+		return abstraction.getOrientation();
+	}
+
+	@Override
+	public void setOrientation(Quat4d orientation) {
+		abstraction.setOrientation(orientation);
+	}
+
+	@Override
+	public String getName() {
+		return abstraction.getName();
+	}
+
+	@Override
+	public String getURLGeometry() {
+		return abstraction.getURLGeometry();
+	}
+
+	@Override
+	public void setTransform(Transform3D t3d) {
+		abstraction.setTransform(t3d);
 	}
 
 }
