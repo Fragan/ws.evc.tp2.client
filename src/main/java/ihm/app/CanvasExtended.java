@@ -21,7 +21,6 @@ import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.J3DGraphics2D;
 import javax.media.j3d.TransformGroup;
-import javax.sound.midi.Receiver;
 import javax.vecmath.Point3d;
 
 import client.Client;
@@ -43,16 +42,14 @@ public class CanvasExtended extends Canvas3D {
 		super(SimpleUniverse.getPreferredConfiguration());
 		setDoubleBufferEnable(true);
 		
-		//universe = new 
-
-		//Load a vrml model
-		
-		IObject aCube = new AObject("cubeDe" + ownerName, "http://espacezives.free.fr/colorcube2.wrl");
-		CObject cube = new CObject(aCube);
 		
 		//Create a universe
 		universeProxyServer = Client.getSharedUniverse("localhost", "1234", "Pluton");
 		universe = new CSharedUniverse(universeProxyServer, this);
+		
+		//Load a vrml model		
+		AObject aCube = new AObject("cubeDe" + ownerName, "http://espacezives.free.fr/colorcube2.wrl");
+		CObject cube = new CObject(aCube, universeProxyServer);
 		
 		
 		//Create a receiver
@@ -63,8 +60,8 @@ public class CanvasExtended extends Canvas3D {
 		universe.add(cube);
 		
 		TransformGroup tgCamera = universe.getPresentation().getTransformgroupCamera();
-		ICamera aCamera = new ACamera(ownerName);
-		camera = new CCamera(aCamera, tgCamera);
+		ACamera aCamera = new ACamera(ownerName);
+		camera = new CCamera(aCamera, tgCamera, universeProxyServer);
 		camera.relativeTranslate(0, 0, 5.0); 
 		universe.add(camera);
 
@@ -76,10 +73,11 @@ public class CanvasExtended extends Canvas3D {
 
 		//Add a keylistener to the canvas
 		addKeyListener(new KeyCameraStateForMouseInteractor(this, getMouseInteractor()));
-	
+
 				
 		//Launch receiver client
-		receiverUpdates.run();
+		receiverUpdates.start();
+	
 
 	}
 

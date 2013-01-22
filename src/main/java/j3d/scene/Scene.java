@@ -33,7 +33,9 @@ public class Scene extends BranchGroup {
 		Background bg = new Background(backgroundColor);
 		bg.setApplicationBounds(bounds);
 		objRoot.addChild(bg);
-
+		objRoot.setCapability(ALLOW_CHILDREN_WRITE);
+		objRoot.setCapability(ALLOW_CHILDREN_READ);
+		objRoot.setCapability(ALLOW_CHILDREN_EXTEND);
 		
 		return objRoot;
 	}

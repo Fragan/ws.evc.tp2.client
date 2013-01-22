@@ -1,10 +1,10 @@
 package j3d.presentation.universe;
 
-import java.awt.Component;
-
+import ihm.interaction.mouse.MouseInteractor;
 import j3d.controller.universe.CSharedUniverse;
 import j3d.scene.Scene;
 
+import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.TransformGroup;
 
@@ -23,7 +23,7 @@ public class PSharedUnivrese extends SimpleUniverse {
 
 	private CSharedUniverse controller;
 	private TransformGroup tgCamera;
-	Scene scene ;
+	private Scene scene ;
 	
 	public PSharedUnivrese(CSharedUniverse controller, Canvas3D canvas) {
 		super(canvas);
@@ -31,6 +31,7 @@ public class PSharedUnivrese extends SimpleUniverse {
 		this.controller = controller;
 		this.scene = Scene.createDefaultScene();
 		getViewer().getView().setSceneAntialiasingEnable(true); // Yeah !!
+		compile();
 		addBranchGraph(scene);
 		
 		//Create a user camera
@@ -51,19 +52,34 @@ public class PSharedUnivrese extends SimpleUniverse {
 	}
 	
 	public void add(PCamera camera) {
-		scene.addChild(camera);
+		BranchGroup bg = new BranchGroup();
+		bg.addChild(camera);
+		bg.compile();
+		scene.addChild(bg);
 	}
 	
 	public void add(PObject object) {
-		scene.addChild(object);
+		BranchGroup bg = new BranchGroup();
+		bg.addChild(object);
+		bg.compile();
+		scene.addChild(bg);
+	}
+	
+	public void add(MouseInteractor mi) {
+		BranchGroup bg = new BranchGroup();
+		bg.addChild(mi);
+		bg.compile();
+		scene.addChild(bg);
 	}
 	
 	public void remove(PCamera camera) {
-		scene.removeChild(camera);
+		BranchGroup bg = (BranchGroup) camera.getParent();
+		scene.removeChild(bg);
 	}
 	
 	public void remove(PObject object) {
-		scene.removeChild(object);
+		BranchGroup bg = (BranchGroup) object.getParent();
+		scene.removeChild(bg);
 	}
 	
 	public void compile() {		

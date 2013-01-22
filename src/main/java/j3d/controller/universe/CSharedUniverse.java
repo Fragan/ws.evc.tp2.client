@@ -2,11 +2,14 @@ package j3d.controller.universe;
 
 import ihm.app.CanvasExtended;
 import ihm.interaction.mouse.MouseInteractor;
+import j3d.abstraction.universe.ACamera;
+import j3d.abstraction.universe.AObject;
 import j3d.interfaces.universe.ICamera;
 import j3d.interfaces.universe.IObject;
 import j3d.interfaces.universe.ISharedUniverse;
 import j3d.presentation.universe.PSharedUnivrese;
 
+import java.awt.image.ColorConvertOp;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,31 +17,31 @@ import java.util.Map;
 public class CSharedUniverse implements ISharedUniverse {
 
 	private PSharedUnivrese presentation;
-	private ISharedUniverse abstraction;
+	private ISharedUniverse abstractionProxy;
 
 	private Map<String, IObject> cObjects;
 	private Map<String, ICamera> cCameras;
 
-	public CSharedUniverse(ISharedUniverse abstraction,
-			CanvasExtended canvas) {
-		this.abstraction = abstraction;
+	public CSharedUniverse(ISharedUniverse abstraction, CanvasExtended canvas) {
+		this.abstractionProxy = abstraction;
 		cObjects = new HashMap<String, IObject>();
 		cCameras = new HashMap<String, ICamera>();
+		presentation = new PSharedUnivrese(this, canvas);
 
 		for (ICamera camera : abstraction.getCameras()) {
-			CCamera cCamera = new CCamera(camera, null);
+			CCamera cCamera = new CCamera((ACamera) camera, null,
+					abstractionProxy);
 			cCameras.put(cCamera.getOwnerName(), cCamera);
 			presentation.add(cCamera.getPresentation());
 
 		}
 
 		for (IObject object : abstraction.getObjects()) {
-			CObject cObject = new CObject(object);
+			CObject cObject = new CObject((AObject) object, abstractionProxy);
 			cObjects.put(cObject.getName(), cObject);
 			presentation.add(cObject.getPresentation());
 		}
-		presentation.compile();
-		presentation = new PSharedUnivrese(this, canvas);
+		// presentation.compile();
 		// Create the scene
 
 	}
@@ -47,95 +50,88 @@ public class CSharedUniverse implements ISharedUniverse {
 		return presentation;
 	}
 
-	@Override
 	public boolean add(IObject object) {
-		if (!(object instanceof CObject))
-			return false;
-		if (abstraction.add(object)) {
-			presentation.add(((CObject) object).getPresentation());
-			cObjects.put(object.getName(), object);
-			presentation.compile();
-			return true;
-		} else
-			return false;
+		if (object instanceof CObject) {
+			if (abstractionProxy.add(object.getAbstraction())) {
+				presentation.add(((CObject) object).getPresentation());
+				cObjects.put(object.getName(), object);
+				return true;
+			}
+		}
+		return false;
 	}
 
-	@Override
 	public void remove(IObject object) {
 		if (object instanceof CObject) {
-			if (abstraction.getObjects().contains(object)) {
+			if (abstractionProxy.getObjects().contains(object)) {
 				presentation.remove(((CObject) object).getPresentation());
 				cObjects.remove(object);
-				presentation.compile();
 			}
 		}
-		abstraction.remove(object);
+		abstractionProxy.remove(object);
 	}
 
-	@Override
 	public boolean add(ICamera camera) {
-		if (!(camera instanceof CCamera))
-			return false;
-		if (abstraction.add(camera)) {
-			presentation.add(((CCamera) camera).getPresentation());
-			cCameras.put(camera.getOwnerName(), camera);
-			presentation.compile();
-			return true;
-		} else
-			return false;
+		if (camera instanceof CCamera) {
+			if (abstractionProxy.add(camera.getAbstraction())) {
+				presentation.add(((CCamera) camera).getPresentation());
+				cCameras.put(camera.getOwnerName(), camera);
+				return true;
+			}
+		}
+		return false;
 	}
 
-	@Override
 	public void remove(ICamera camera) {
 		if (camera instanceof CCamera) {
-			if (abstraction.getObjects().contains(camera)) {
+			if (abstractionProxy.getObjects().contains(camera)) {
 				presentation.remove(((CCamera) camera).getPresentation());
 				cCameras.put(camera.getOwnerName(), camera);
-				presentation.compile();
 			}
 		}
-		abstraction.remove(camera);
+		abstractionProxy.remove(camera);
 	}
 
 	public void addMouseInteractor(MouseInteractor mi) {
-		presentation.getScene().addChild(mi);
+		presentation.add(mi);
 	}
 
-
-
-	@Override
 	public Collection<IObject> getObjects() {
-		return abstraction.getObjects();
+		return abstractionProxy.getObjects();
 	}
 
-	@Override
 	public Collection<ICamera> getCameras() {
-		return abstraction.getCameras();
+		return abstractionProxy.getCameras();
 	}
 
-	@Override
 	public IObject getObject(String name) {
-		return abstraction.getObject(name);
+		return abstractionProxy.getObject(name);
 	}
 
-	@Override
 	public ICamera getCamera(String name) {
-		return abstraction.getCamera(name);
+		return abstractionProxy.getCamera(name);
 	}
 
-	@Override
 	public void update(ICamera camera) {
-		abstraction.update(camera);
+		ICamera cCamera = cCameras.get(camera.getOwnerName());
+		if (cCamera != null) {
+			cCamera.setOrientation(camera.getOrientation());
+			cCamera.setPosition(camera.getPosition());
+		}
+
 	}
 
-	@Override
 	public void update(IObject object) {
-		abstraction.update(object);
+		IObject cObject = cObjects.get(object.getName());
+		if (cObject != null) {
+			cObject.setOrientation(object.getOrientation());
+			cObject.setPosition(object.getPosition());
+		}
+
 	}
 
-	@Override
 	public String getName() {
-		return abstraction.getName();
+		return abstractionProxy.getName();
 	}
 
 }

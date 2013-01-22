@@ -2,6 +2,7 @@ package j3d.controller.universe;
 
 import j3d.abstraction.universe.AObject;
 import j3d.interfaces.universe.IObject;
+import j3d.interfaces.universe.ISharedUniverse;
 import j3d.presentation.universe.PObject;
 
 import javax.media.j3d.Transform3D;
@@ -11,13 +12,15 @@ import javax.vecmath.Vector3d;
 import tools.Downloader;
 
 // controle les interactions
-public class CObject implements IObject {
+public class CObject implements IObject{
 	
 	private PObject presentation;
-	private IObject abstraction;
+	private AObject abstraction;
+	private ISharedUniverse proxyUniverse;
 	
-	public CObject(IObject abstraction) {
+	public CObject(AObject abstraction, ISharedUniverse proxy) {
 		this.abstraction = abstraction;
+		proxyUniverse = proxy;
 		String userUrl = abstraction.getURLGeometry();
 		if (userUrl.startsWith("http")) {
 			userUrl = Downloader.donwloadFile(userUrl, false);
@@ -88,39 +91,46 @@ public class CObject implements IObject {
 		return presentation;
 	}
 
-	@Override
+	
 	public Vector3d getPosition() {
 		return abstraction.getPosition();
 	}
 
-	@Override
+	
 	public void setPosition(Vector3d position) {
 		abstraction.setPosition(position);
+		proxyUniverse.update(abstraction);
 	}
 
-	@Override
+	
 	public Quat4d getOrientation() {
 		return abstraction.getOrientation();
 	}
 
-	@Override
+	
 	public void setOrientation(Quat4d orientation) {
 		abstraction.setOrientation(orientation);
+		proxyUniverse.update(abstraction);
 	}
 
-	@Override
+	
 	public String getName() {
 		return abstraction.getName();
 	}
 
-	@Override
+	
 	public String getURLGeometry() {
 		return abstraction.getURLGeometry();
 	}
 
-	@Override
+	
 	public void setTransform(Transform3D t3d) {
 		abstraction.setTransform(t3d);
+		proxyUniverse.update(abstraction);
+	}
+
+	public AObject getAbstraction() {
+		return abstraction;
 	}
 
 }
