@@ -1,8 +1,10 @@
 package j3d.controller.universe;
 
+import java.rmi.RemoteException;
+
 import j3d.abstraction.universe.ACamera;
 import j3d.interfaces.universe.ICamera;
-import j3d.interfaces.universe.ISharedUniverse;
+import j3d.interfaces.universe.ISharedUniverseServer;
 import j3d.presentation.universe.PCamera;
 
 import javax.media.j3d.Transform3D;
@@ -16,9 +18,9 @@ public class CCamera implements ICamera  {
 	private ACamera abstraction;
 	
 	private boolean modeCameraRotationScene;
-	private ISharedUniverse proxyUniverse;
+	private ISharedUniverseServer proxyUniverse;
 	
-	public CCamera(ACamera abstraction, TransformGroup tgCamera, ISharedUniverse proxy) {
+	public CCamera(ACamera abstraction, TransformGroup tgCamera, ISharedUniverseServer proxy) {
 		this.abstraction = abstraction;
 		proxyUniverse = proxy;
 		modeCameraRotationScene = false;
@@ -111,7 +113,11 @@ public class CCamera implements ICamera  {
 	
 	public void setPosition(Vector3d position) {
 		abstraction.setPosition(position);
-		proxyUniverse.update(abstraction);
+		try {
+			proxyUniverse.update(abstraction);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 
 	
@@ -122,13 +128,21 @@ public class CCamera implements ICamera  {
 	
 	public void setOrientation(Quat4d orientation) {
 		abstraction.setOrientation(orientation);
-		proxyUniverse.update(abstraction);
+		try {
+			proxyUniverse.update(abstraction);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 
 	
 	public void setTransform(Transform3D t3d) {
 		abstraction.setTransform(t3d);
-		proxyUniverse.update(abstraction);
+		try {
+			proxyUniverse.update(abstraction);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public ACamera getAbstraction() {

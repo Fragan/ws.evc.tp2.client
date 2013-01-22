@@ -7,9 +7,10 @@ import j3d.abstraction.universe.AObject;
 import j3d.interfaces.universe.ICamera;
 import j3d.interfaces.universe.IObject;
 import j3d.interfaces.universe.ISharedUniverse;
+import j3d.interfaces.universe.ISharedUniverseServer;
 import j3d.presentation.universe.PSharedUnivrese;
 
-import java.awt.image.ColorConvertOp;
+import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,12 +18,13 @@ import java.util.Map;
 public class CSharedUniverse implements ISharedUniverse {
 
 	private PSharedUnivrese presentation;
-	private ISharedUniverse abstractionProxy;
+	private ISharedUniverseServer abstractionProxy;
 
 	private Map<String, IObject> cObjects;
 	private Map<String, ICamera> cCameras;
 
-	public CSharedUniverse(ISharedUniverse abstraction, CanvasExtended canvas) {
+	public CSharedUniverse(ISharedUniverseServer abstraction,
+			CanvasExtended canvas) throws RemoteException {
 		this.abstractionProxy = abstraction;
 		cObjects = new HashMap<String, IObject>();
 		cCameras = new HashMap<String, ICamera>();
@@ -52,10 +54,14 @@ public class CSharedUniverse implements ISharedUniverse {
 
 	public boolean add(IObject object) {
 		if (object instanceof CObject) {
-			if (abstractionProxy.add(object.getAbstraction())) {
-				presentation.add(((CObject) object).getPresentation());
-				cObjects.put(object.getName(), object);
-				return true;
+			try {
+				if (abstractionProxy.add(object.getAbstraction())) {
+					presentation.add(((CObject) object).getPresentation());
+					cObjects.put(object.getName(), object);
+					return true;
+				}
+			} catch (RemoteException e) {
+				e.printStackTrace();
 			}
 		}
 		return false;
@@ -63,20 +69,29 @@ public class CSharedUniverse implements ISharedUniverse {
 
 	public void remove(IObject object) {
 		if (object instanceof CObject) {
-			if (abstractionProxy.getObjects().contains(object)) {
-				presentation.remove(((CObject) object).getPresentation());
-				cObjects.remove(object);
+			try {
+				if (abstractionProxy.getObjects().contains(object)) {
+					presentation.remove(((CObject) object).getPresentation());
+					cObjects.remove(object);
+				}
+				abstractionProxy.remove(object);
+			} catch (RemoteException e) {
+				e.printStackTrace();
 			}
 		}
-		abstractionProxy.remove(object);
+
 	}
 
 	public boolean add(ICamera camera) {
 		if (camera instanceof CCamera) {
-			if (abstractionProxy.add(camera.getAbstraction())) {
-				presentation.add(((CCamera) camera).getPresentation());
-				cCameras.put(camera.getOwnerName(), camera);
-				return true;
+			try {
+				if (abstractionProxy.add(camera.getAbstraction())) {
+					presentation.add(((CCamera) camera).getPresentation());
+					cCameras.put(camera.getOwnerName(), camera);
+					return true;
+				}
+			} catch (RemoteException e) {
+				e.printStackTrace();
 			}
 		}
 		return false;
@@ -84,12 +99,17 @@ public class CSharedUniverse implements ISharedUniverse {
 
 	public void remove(ICamera camera) {
 		if (camera instanceof CCamera) {
-			if (abstractionProxy.getObjects().contains(camera)) {
-				presentation.remove(((CCamera) camera).getPresentation());
-				cCameras.put(camera.getOwnerName(), camera);
+			try {
+				if (abstractionProxy.getObjects().contains(camera)) {
+					presentation.remove(((CCamera) camera).getPresentation());
+					cCameras.put(camera.getOwnerName(), camera);
+				}
+				abstractionProxy.remove(camera);
+			} catch (RemoteException e) {
+				e.printStackTrace();
 			}
 		}
-		abstractionProxy.remove(camera);
+		
 	}
 
 	public void addMouseInteractor(MouseInteractor mi) {
@@ -97,19 +117,39 @@ public class CSharedUniverse implements ISharedUniverse {
 	}
 
 	public Collection<IObject> getObjects() {
-		return abstractionProxy.getObjects();
+		try {
+			return abstractionProxy.getObjects();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public Collection<ICamera> getCameras() {
-		return abstractionProxy.getCameras();
+		try {
+			return abstractionProxy.getCameras();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public IObject getObject(String name) {
-		return abstractionProxy.getObject(name);
+		try {
+			return abstractionProxy.getObject(name);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public ICamera getCamera(String name) {
-		return abstractionProxy.getCamera(name);
+		try {
+			return abstractionProxy.getCamera(name);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public void update(ICamera camera) {
@@ -131,7 +171,12 @@ public class CSharedUniverse implements ISharedUniverse {
 	}
 
 	public String getName() {
-		return abstractionProxy.getName();
+		try {
+			return abstractionProxy.getName();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

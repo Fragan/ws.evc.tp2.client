@@ -11,11 +11,12 @@ import j3d.controller.universe.CObject;
 import j3d.controller.universe.CSharedUniverse;
 import j3d.interfaces.universe.ICamera;
 import j3d.interfaces.universe.IObject;
-import j3d.interfaces.universe.ISharedUniverse;
+import j3d.interfaces.universe.ISharedUniverseServer;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.rmi.RemoteException;
 
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Canvas3D;
@@ -35,7 +36,7 @@ public class CanvasExtended extends Canvas3D {
 	
 	private MouseInteractor mouseInteractor;
 	private CCamera camera;
-	private ISharedUniverse universeProxyServer;
+	private ISharedUniverseServer universeProxyServer;
 	private ReceiverUpdates receiverUpdates;
 
 	public CanvasExtended(String ownerName) {
@@ -45,7 +46,12 @@ public class CanvasExtended extends Canvas3D {
 		
 		//Create a universe
 		universeProxyServer = Client.getSharedUniverse("localhost", "1234", "Pluton");
-		universe = new CSharedUniverse(universeProxyServer, this);
+		try {
+			universe = new CSharedUniverse(universeProxyServer, this);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
 		
 		//Load a vrml model		
 		AObject aCube = new AObject("cubeDe" + ownerName, "http://espacezives.free.fr/colorcube2.wrl");

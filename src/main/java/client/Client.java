@@ -1,15 +1,15 @@
 package client;
 
-import j3d.abstraction.universe.ASharedUniverse;
+import j3d.interfaces.universe.ISharedUniverseServer;
 
 import java.rmi.Naming;
 
 public class Client {
 
-	public static ASharedUniverse getSharedUniverse(String serverHostName, String serverRMIPort, String sharedWorldName) {
-		ASharedUniverse sharedWorld = null;
+	public static ISharedUniverseServer getSharedUniverse(String serverHostName, String serverRMIPort, String sharedWorldName) {
+		ISharedUniverseServer sharedWorld = null;
 		try {
-			sharedWorld = (ASharedUniverse) Naming.lookup("//"
+			sharedWorld = (ISharedUniverseServer) Naming.lookup("//"
 					+ serverHostName + ":" + serverRMIPort + "/"
 					+ sharedWorldName);
 		} catch (Exception e) {

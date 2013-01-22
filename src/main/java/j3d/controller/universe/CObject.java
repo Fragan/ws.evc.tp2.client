@@ -1,8 +1,10 @@
 package j3d.controller.universe;
 
+import java.rmi.RemoteException;
+
 import j3d.abstraction.universe.AObject;
 import j3d.interfaces.universe.IObject;
-import j3d.interfaces.universe.ISharedUniverse;
+import j3d.interfaces.universe.ISharedUniverseServer;
 import j3d.presentation.universe.PObject;
 
 import javax.media.j3d.Transform3D;
@@ -16,9 +18,9 @@ public class CObject implements IObject{
 	
 	private PObject presentation;
 	private AObject abstraction;
-	private ISharedUniverse proxyUniverse;
+	private ISharedUniverseServer proxyUniverse;
 	
-	public CObject(AObject abstraction, ISharedUniverse proxy) {
+	public CObject(AObject abstraction, ISharedUniverseServer proxy) {
 		this.abstraction = abstraction;
 		proxyUniverse = proxy;
 		String userUrl = abstraction.getURLGeometry();
@@ -99,7 +101,11 @@ public class CObject implements IObject{
 	
 	public void setPosition(Vector3d position) {
 		abstraction.setPosition(position);
-		proxyUniverse.update(abstraction);
+		try {
+			proxyUniverse.update(abstraction);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 
 	
@@ -110,7 +116,11 @@ public class CObject implements IObject{
 	
 	public void setOrientation(Quat4d orientation) {
 		abstraction.setOrientation(orientation);
-		proxyUniverse.update(abstraction);
+		try {
+			proxyUniverse.update(abstraction);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 
 	
@@ -126,7 +136,11 @@ public class CObject implements IObject{
 	
 	public void setTransform(Transform3D t3d) {
 		abstraction.setTransform(t3d);
-		proxyUniverse.update(abstraction);
+		try {
+			proxyUniverse.update(abstraction);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public AObject getAbstraction() {
