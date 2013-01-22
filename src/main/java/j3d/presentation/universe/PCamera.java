@@ -34,7 +34,7 @@ public class PCamera extends TransformGroup {
 
 	@Override
 	public void setTransform(Transform3D t3d) {
-		realTgCamera.setTransform(t3d);
+		realTgCamera.setTransform(t3d); // TODO vérifier
 	}
 	
 	

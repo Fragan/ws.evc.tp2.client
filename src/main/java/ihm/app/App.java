@@ -25,7 +25,7 @@ public class App extends JFrame {
 			System.exit(0);
 		}
 		
-		
+		setTitle("By DOUCHEMENT & DEMIRDJIAN - Current user : " + ownerPseudo);
 			
 		
 		//Initialize elements
