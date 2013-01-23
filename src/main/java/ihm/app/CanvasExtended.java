@@ -9,8 +9,6 @@ import j3d.abstraction.universe.AObject;
 import j3d.controller.universe.CCamera;
 import j3d.controller.universe.CObject;
 import j3d.controller.universe.CSharedUniverse;
-import j3d.interfaces.universe.ICamera;
-import j3d.interfaces.universe.IObject;
 import j3d.interfaces.universe.ISharedUniverseServer;
 
 import java.awt.Color;
@@ -55,6 +53,7 @@ public class CanvasExtended extends Canvas3D {
 		
 		//Load a vrml model		
 		AObject aCube = new AObject("cubeDe" + ownerName, "http://espacezives.free.fr/colorcube2.wrl");
+//		AObject aCube = new AObject("cubeDe" + ownerName, "http://fragan.serv.free.fr/vrml/pyramid.wrl");
 		CObject cube = new CObject(aCube, universeProxyServer);
 		
 		

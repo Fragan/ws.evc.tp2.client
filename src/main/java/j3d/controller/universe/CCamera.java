@@ -12,6 +12,8 @@ import javax.media.j3d.TransformGroup;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
+import tools.Downloader;
+
 public class CCamera implements ICamera {
 
 	private PCamera presentation;
@@ -25,7 +27,31 @@ public class CCamera implements ICamera {
 		this.abstraction = abstraction;
 		serverProxy = proxy;
 		modeCameraRotationScene = false;
+		
 		presentation = new PCamera(this, tgCamera);
+	}
+	
+	/**
+	 * With a pyramid
+	 * @param abstraction
+	 * @param tgCamera
+	 * @param proxy
+	 * @param cameraObjectUrl
+	 */
+	public CCamera(ACamera abstraction, TransformGroup tgCamera,
+			ISharedUniverseServer proxy, String cameraObjectUrl) {
+		this.abstraction = abstraction;
+		serverProxy = proxy;
+		modeCameraRotationScene = false;
+		
+		
+		String userUrl = cameraObjectUrl;
+		if (userUrl.startsWith("http")) {
+			userUrl = Downloader.donwloadFile(userUrl, false);
+		}
+		
+		
+		presentation = new PCamera(this, tgCamera, userUrl);
 	}
 
 	public boolean isModeCameraRotationScene() {

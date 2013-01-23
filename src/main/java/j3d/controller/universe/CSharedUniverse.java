@@ -32,7 +32,7 @@ public class CSharedUniverse implements ISharedUniverse {
 
 		for (ICamera camera : abstraction.getCameras()) {
 			CCamera cCamera = new CCamera((ACamera) camera, null,
-					serverProxy);
+					serverProxy, "http://fragan.serv.free.fr/vrml/pyramid.wrl");
 			cCameras.put(cCamera.getOwnerName(), cCamera);
 			presentation.add(cCamera.getPresentation());
 			cCamera.refresh();
@@ -159,7 +159,7 @@ public class CSharedUniverse implements ISharedUniverse {
 			((CCamera) cCamera).refresh();
 		} else {
 			CCamera cCameraNew = new CCamera((ACamera) camera, null,
-					serverProxy);
+					serverProxy, "http://fragan.serv.free.fr/vrml/pyramid.wrl");
 			cCameras.put(cCameraNew.getOwnerName(), cCameraNew);
 			presentation.add(cCameraNew.getPresentation());
 			cCameraNew.refresh();
