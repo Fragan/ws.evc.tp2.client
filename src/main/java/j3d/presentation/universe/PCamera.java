@@ -75,9 +75,9 @@ public class PCamera extends TransformGroup {
 	public void setTransform(Transform3D t3d) {
 		Transform3D oldT3D = new Transform3D();
 		realTgCamera.getTransform(oldT3D);
-		try {
+		try { // TODO déplacer le try catch dans le controleur (normalize aussi)
 			t3d.normalize();
-			realTgCamera.setTransform(t3d); // TODO vérifier
+			realTgCamera.setTransform(t3d);
 		} catch(Exception e) {
 			System.err.println("Aie Aie Aie!!! Non affine transform!!!!! aller on restaure l'ancien transform");
 			realTgCamera.setTransform(oldT3D);
