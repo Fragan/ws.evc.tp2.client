@@ -58,6 +58,7 @@ public class CObject implements IObject {
 		tc.setEuler(new Vector3d(-y, x, z));
 		oldT3D.mul(tc);
 
+		oldT3D.normalize();
 		presentation.setTransform(oldT3D);
 		setTransform(oldT3D, true);
 	}
@@ -79,6 +80,8 @@ public class CObject implements IObject {
 		absoluteDeltaT3D.mul(vpT3Dinv);
 		Transform3D newT3D = new Transform3D();
 		newT3D.mul(absoluteDeltaT3D, oldT3D);
+		
+		newT3D.normalize();
 		presentation.setTransform(newT3D);
 		setTransform(newT3D, true);
 	}
