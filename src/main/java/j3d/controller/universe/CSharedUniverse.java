@@ -22,6 +22,7 @@ public class CSharedUniverse implements ISharedUniverse {
 
 	private Map<String, IObject> cObjects;
 	private Map<String, ICamera> cCameras;
+	private CCamera cCameraUser = null;
 
 	public CSharedUniverse(ISharedUniverseServer abstraction,
 			CanvasExtended canvas) throws RemoteException {
@@ -31,8 +32,10 @@ public class CSharedUniverse implements ISharedUniverse {
 		presentation = new PSharedUnivrese(this, canvas);
 
 		for (ICamera camera : abstraction.getCameras()) {
+			if (cCameraUser != null && camera.getOwnerName().equals(cCameraUser.getOwnerName()))
+				continue;
 			CCamera cCamera = new CCamera((ACamera) camera, null,
-					serverProxy, "http://fragan.serv.free.fr/vrml/pyramid.wrl");
+					serverProxy, "http://espacezives.free.fr/pyramid.wrl");
 			cCameras.put(cCamera.getOwnerName(), cCamera);
 			presentation.add(cCamera.getPresentation());
 			cCamera.refresh();
@@ -150,16 +153,29 @@ public class CSharedUniverse implements ISharedUniverse {
 		}
 		return null;
 	}
+	
+	public ICamera getCameraUser() {
+		return cCameraUser;
+	}
+	
+	public void setCameraUser(CCamera camera) {
+		if (cCameraUser != null)
+			remove(cCameraUser);
+		cCameraUser = camera;
+		add(cCameraUser);
+	}
 
 	public void update(ICamera camera) {
 		ICamera cCamera = cCameras.get(camera.getOwnerName());
+		if (cCameraUser != null && camera.getOwnerName() == cCameraUser.getOwnerName())
+			return;
 		if (cCamera != null) {
-			cCamera.setOrientation(camera.getOrientation(), false);
 			cCamera.setPosition(camera.getPosition(), false);
+			cCamera.setOrientation(camera.getOrientation(), false);			
 			((CCamera) cCamera).refresh();
 		} else {
 			CCamera cCameraNew = new CCamera((ACamera) camera, null,
-					serverProxy, "http://fragan.serv.free.fr/vrml/pyramid.wrl");
+					serverProxy, "http://espacezives.free.fr/pyramid.wrl");
 			cCameras.put(cCameraNew.getOwnerName(), cCameraNew);
 			presentation.add(cCameraNew.getPresentation());
 			cCameraNew.refresh();

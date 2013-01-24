@@ -3,6 +3,7 @@ package j3d.presentation.universe;
 import java.io.FileNotFoundException;
 
 import j3d.controller.universe.CCamera;
+import j3d.object.VirtualObject;
 
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
@@ -42,12 +43,12 @@ public class PCamera extends TransformGroup {
 		controller = cCamera;
 		realTgCamera = tgCamera;
 		if (realTgCamera == null)
-			realTgCamera = new TransformGroup();
+			realTgCamera = new VirtualObject();
 		
 		
-		this.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-		this.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-		this.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		realTgCamera.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		realTgCamera.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		realTgCamera.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
 		
 		VrmlLoader loader = new VrmlLoader();
 		try {			
@@ -58,6 +59,7 @@ public class PCamera extends TransformGroup {
 		
 		
 		realTgCamera.addChild(scene.getSceneGroup());
+		this.addChild(realTgCamera);
 	}
 	
 	public CCamera getController() {
@@ -71,7 +73,14 @@ public class PCamera extends TransformGroup {
 
 	@Override
 	public void setTransform(Transform3D t3d) {
-		realTgCamera.setTransform(t3d); // TODO vérifier
+		Transform3D oldT3D = new Transform3D();
+		realTgCamera.getTransform(oldT3D);
+		try {					
+			realTgCamera.setTransform(t3d); // TODO vérifier
+		} catch(Exception e) {
+			System.err.println("Aie Aie Aie!!! Non affine transform!!!!! aller on restaure l'ancien transform");
+			realTgCamera.setTransform(oldT3D);
+		}
 	}
 	
 	

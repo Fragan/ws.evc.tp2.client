@@ -13,7 +13,7 @@ public class Client {
 					+ serverHostName + ":" + serverRMIPort + "/"
 					+ sharedWorldName);
 		} catch (Exception e) {
-			System.out.println("probleme liaison CentralManager");
+			System.out.println("Probleme liaison RMI");
 			e.printStackTrace();
 			System.exit(1);
 		}

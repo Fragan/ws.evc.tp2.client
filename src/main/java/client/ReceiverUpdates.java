@@ -35,12 +35,15 @@ public class ReceiverUpdates extends Thread implements Runnable {
 	}
 
 	public Object receive() {
+		
 		try {
 			byte[] message = new byte[1024];
 			DatagramPacket paquet = new DatagramPacket(message, message.length);
 			socketReception.receive(paquet);
+
 			ByteArrayInputStream bais = new ByteArrayInputStream(
 					paquet.getData());
+
 			ObjectInputStream ois = new ObjectInputStream(bais);
 			return ois.readObject();
 		} catch (Exception e) {

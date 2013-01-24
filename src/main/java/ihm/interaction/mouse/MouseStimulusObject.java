@@ -9,6 +9,7 @@ import java.awt.event.MouseWheelEvent;
 import java.util.Enumeration;
 
 import javax.media.j3d.Canvas3D;
+import javax.media.j3d.Node;
 import javax.media.j3d.WakeupOnAWTEvent;
 
 import com.sun.j3d.utils.picking.PickCanvas;
@@ -105,8 +106,12 @@ public class MouseStimulusObject extends AMouseStimulusState {
 		PickResult[] sgPath = pickShape.pickAllSorted();
 		if (sgPath != null) {
 			try {
-				msd.cObjectInInteraction = ((PObject) sgPath[0]
-						.getNode(PickResult.TRANSFORM_GROUP)).getController();
+				Node node = sgPath[0]
+						.getNode(PickResult.TRANSFORM_GROUP);
+				if (node instanceof PObject) 
+					msd.cObjectInInteraction = ((PObject) node).getController();
+				else
+					msd.cObjectInInteraction = null;
 			} catch (Exception ex) {
 				System.out.println(ex);
 			}

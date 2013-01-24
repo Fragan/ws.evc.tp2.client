@@ -42,14 +42,12 @@ public class CCamera implements ICamera {
 			ISharedUniverseServer proxy, String cameraObjectUrl) {
 		this.abstraction = abstraction;
 		serverProxy = proxy;
-		modeCameraRotationScene = false;
-		
+		modeCameraRotationScene = false;		
 		
 		String userUrl = cameraObjectUrl;
 		if (userUrl.startsWith("http")) {
 			userUrl = Downloader.donwloadFile(userUrl, false);
-		}
-		
+		}		
 		
 		presentation = new PCamera(this, tgCamera, userUrl);
 	}
@@ -106,12 +104,6 @@ public class CCamera implements ICamera {
 		z = Math.PI * dr / 180;
 
 		localT3D.setEuler(new Vector3d(y, -x, z));
-		// localT3D.rotY(-Math.sin(x) * Math.cos(y));
-		// oldT3D.mul(localT3D);
-
-		// localT3D.rotX(Math.cos(x) * Math.sin(y));
-		// oldT3D.mul(localT3D);
-		// localT3D.rotZ(z);
 
 		if (modeCameraRotationScene)
 			oldT3D.mul(localT3D, oldT3D);
@@ -125,8 +117,8 @@ public class CCamera implements ICamera {
 	public void refresh() {
 		Transform3D t3d = new Transform3D();
 		presentation.getTransform(t3d);
-		t3d.setRotation(abstraction.getOrientation());
 		t3d.setTranslation(abstraction.getPosition());
+		t3d.setRotation(abstraction.getOrientation());		
 		presentation.setTransform(t3d);
 	}
 

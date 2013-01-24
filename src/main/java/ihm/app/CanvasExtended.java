@@ -53,7 +53,6 @@ public class CanvasExtended extends Canvas3D {
 		
 		//Load a vrml model		
 		AObject aCube = new AObject("cubeDe" + ownerName, "http://espacezives.free.fr/colorcube2.wrl");
-//		AObject aCube = new AObject("cubeDe" + ownerName, "http://fragan.serv.free.fr/vrml/pyramid.wrl");
 		CObject cube = new CObject(aCube, universeProxyServer);
 		
 		
@@ -68,7 +67,7 @@ public class CanvasExtended extends Canvas3D {
 		ACamera aCamera = new ACamera(ownerName);
 		camera = new CCamera(aCamera, tgCamera, universeProxyServer);
 		camera.relativeTranslate(0, 0, 5.0); 
-		universe.add(camera);
+		universe.setCameraUser(camera);
 
 		//Add a mouse interactor to the scene
 		mouseInteractor = new MouseInteractor(universe.getPresentation().getScene(), camera);
