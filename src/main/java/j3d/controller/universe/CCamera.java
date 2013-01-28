@@ -161,6 +161,7 @@ public class CCamera implements ICamera {
 	}
 
 	public void setTransform(Transform3D t3d, boolean diffuse) {
+		t3d.normalize();
 		abstraction.setTransform(t3d, false);
 		if (diffuse) {
 			try {
