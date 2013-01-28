@@ -38,7 +38,7 @@ public class CCamera implements ICamera {
 	 * @param proxy
 	 * @param cameraObjectUrl
 	 */
-	public CCamera(ACamera abstraction, TransformGroup tgCamera,
+	public CCamera(ACamera abstraction,
 			ISharedUniverseServer proxy, String cameraObjectUrl) {
 		this.abstraction = abstraction;
 		serverProxy = proxy;
@@ -49,7 +49,7 @@ public class CCamera implements ICamera {
 			userUrl = Downloader.donwloadFile(userUrl, false);
 		}		
 		
-		presentation = new PCamera(this, tgCamera, userUrl);
+		presentation = new PCamera(this, userUrl);
 	}
 
 	public boolean isModeCameraRotationScene() {
@@ -118,7 +118,8 @@ public class CCamera implements ICamera {
 		Transform3D t3d = new Transform3D();
 		presentation.getTransform(t3d);
 		t3d.setTranslation(abstraction.getPosition());
-		t3d.setRotation(abstraction.getOrientation());		
+		t3d.setRotation(abstraction.getOrientation());
+		t3d.normalize();
 		presentation.setTransform(t3d);
 	}
 

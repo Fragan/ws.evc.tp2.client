@@ -24,30 +24,35 @@ public class CSharedUniverse implements ISharedUniverse {
 	private Map<String, ICamera> cCameras;
 	private CCamera cCameraUser = null;
 
-	public CSharedUniverse(ISharedUniverseServer abstraction,
-			CanvasExtended canvas) throws RemoteException {
-		this.serverProxy = abstraction;
+	public CSharedUniverse(ISharedUniverseServer serverProxy,
+			CanvasExtended canvas) {
+		this.serverProxy = serverProxy;
 		cObjects = new HashMap<String, IObject>();
 		cCameras = new HashMap<String, ICamera>();
 		presentation = new PSharedUnivrese(this, canvas);
 
-		for (ICamera camera : abstraction.getCameras()) {
-			if (cCameraUser != null && camera.getOwnerName().equals(cCameraUser.getOwnerName()))
-				continue;
-			CCamera cCamera = new CCamera((ACamera) camera, null,
-					serverProxy, "http://espacezives.free.fr/pyramid.wrl");
-			cCameras.put(cCamera.getOwnerName(), cCamera);
-			presentation.add(cCamera.getPresentation());
-			cCamera.refresh();
+	}
+
+	public void init() throws RemoteException {
+		for (ICamera camera : serverProxy.getCameras()) {
+			if (cCameraUser == null
+					|| (!camera.getOwnerName().equals(
+							cCameraUser.getOwnerName()))) {
+				System.out.println("===========> " + camera.getOwnerName() +  " <> "+ cCameraUser.getOwnerName());
+				CCamera cCamera = new CCamera((ACamera) camera, 
+						serverProxy, "http://espacezives.free.fr/pyramid.wrl");
+				cCameras.put(cCamera.getOwnerName(), cCamera);
+				presentation.add(cCamera.getPresentation());
+				cCamera.refresh();
+			}
 		}
 
-		for (IObject object : abstraction.getObjects()) {
+		for (IObject object : serverProxy.getObjects()) {
 			CObject cObject = new CObject((AObject) object, serverProxy);
 			cObjects.put(cObject.getName(), cObject);
 			presentation.add(cObject.getPresentation());
 			cObject.refresh();
 		}
-
 	}
 
 	public PSharedUnivrese getPresentation() {
@@ -111,7 +116,7 @@ public class CSharedUniverse implements ISharedUniverse {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 
 	public void addMouseInteractor(MouseInteractor mi) {
@@ -153,28 +158,30 @@ public class CSharedUniverse implements ISharedUniverse {
 		}
 		return null;
 	}
-	
+
 	public ICamera getCameraUser() {
 		return cCameraUser;
 	}
-	
-	public void setCameraUser(CCamera camera) {
-		if (cCameraUser != null)
+
+	public void setCameraUser(CCamera camera, boolean pushOnServer) {
+		if (cCameraUser != null && pushOnServer)
 			remove(cCameraUser);
 		cCameraUser = camera;
-		add(cCameraUser);
+		if (pushOnServer)
+			add(cCameraUser);
 	}
 
 	public void update(ICamera camera) {
 		ICamera cCamera = cCameras.get(camera.getOwnerName());
-		if (cCameraUser != null && camera.getOwnerName() == cCameraUser.getOwnerName())
+		if (cCameraUser != null
+				&& camera.getOwnerName().equals(cCameraUser.getOwnerName()))
 			return;
 		if (cCamera != null) {
 			cCamera.setPosition(camera.getPosition(), false);
-			cCamera.setOrientation(camera.getOrientation(), false);			
+			cCamera.setOrientation(camera.getOrientation(), false);
 			((CCamera) cCamera).refresh();
 		} else {
-			CCamera cCameraNew = new CCamera((ACamera) camera, null,
+			CCamera cCameraNew = new CCamera((ACamera) camera, 
 					serverProxy, "http://espacezives.free.fr/pyramid.wrl");
 			cCameras.put(cCameraNew.getOwnerName(), cCameraNew);
 			presentation.add(cCameraNew.getPresentation());
@@ -189,8 +196,7 @@ public class CSharedUniverse implements ISharedUniverse {
 			cObject.setOrientation(object.getOrientation(), false);
 			cObject.setPosition(object.getPosition(), false);
 			((CObject) cObject).refresh();
-		}
-		else {
+		} else {
 			CObject cObjectNew = new CObject((AObject) object, serverProxy);
 			cObjects.put(cObjectNew.getName(), cObjectNew);
 			presentation.add(cObjectNew.getPresentation());

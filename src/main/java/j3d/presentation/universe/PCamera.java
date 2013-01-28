@@ -50,13 +50,11 @@ public class PCamera extends TransformGroup {
 	 * @param tgCamera
 	 * @param cameraObjectUrl
 	 */
-	public PCamera(CCamera cCamera, TransformGroup tgCamera,
-			String cameraObjectUrl) {
+	public PCamera(CCamera cCamera, String cameraObjectUrl) {
 
+		
 		controller = cCamera;
-		realTgCamera = tgCamera;
-		if (realTgCamera == null)
-			realTgCamera = new VirtualObject();
+		realTgCamera = new VirtualObject();
 
 		realTgCamera.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 		realTgCamera.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
@@ -71,12 +69,15 @@ public class PCamera extends TransformGroup {
 
 		// Pyramid
 		realTgCamera.addChild(scene.getSceneGroup());
-		
+
 		// Billboard name
-		BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 400.0);
-		TransformGroup billboard = createBillboard(controller.getOwnerName(), new Point3f(0f, 0f, 0f), Billboard.ROTATE_ABOUT_POINT, new Point3f(0f, 0f, 0f), bounds);
+		BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0),
+				400.0);
+		TransformGroup billboard = createBillboard(controller.getOwnerName(),
+				new Point3f(0f, 0f, 0f), Billboard.ROTATE_ABOUT_POINT,
+				new Point3f(0f, 0f, 0f), bounds);
 		realTgCamera.addChild(billboard);
-		
+
 		this.addChild(realTgCamera);
 	}
 
