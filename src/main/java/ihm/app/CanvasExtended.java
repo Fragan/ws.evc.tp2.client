@@ -9,7 +9,6 @@ import j3d.abstraction.universe.AObject;
 import j3d.controller.universe.CCamera;
 import j3d.controller.universe.CObject;
 import j3d.controller.universe.CSharedUniverse;
-import j3d.interfaces.universe.ICamera;
 import j3d.interfaces.universe.ISharedUniverseServer;
 
 import java.awt.Color;
@@ -48,16 +47,22 @@ public class CanvasExtended extends Canvas3D {
 		universe = new CSharedUniverse(universeProxyServer, this);
 
 		// Load a vrml model
-		AObject aCube = new AObject("cubeDe" + ownerName,
-				"http://espacezives.free.fr/colorcube2.wrl");
+		AObject aCube;
+		if ("test".equals(ownerName)) {
+			aCube = new AObject("cubeDe" + ownerName + "_" + (Math.random() * 1000),
+					"http://espacezives.free.fr/coneVert.wrl");
+		}
+		else {
+			aCube = new AObject("cubeDe" + ownerName + "_" + (Math.random() * 1000),
+					"http://espacezives.free.fr/colorcube2.wrl");
+		}
 		CObject cube = new CObject(aCube, universeProxyServer);
 
 		// Create a receiver
 		receiverUpdates = new ReceiverUpdates("239.0.0.1", 1234);
 		receiverUpdates.setDeportedClient(universe);
 
-		// Add personnal cube to the shared universe
-		universe.add(cube);
+		
 
 		// Check if user camera is existing in universe
 		// True : assign the universe camera to the current user
@@ -88,6 +93,8 @@ public class CanvasExtended extends Canvas3D {
 			System.exit(0);
 		}
 		
+		// Add personnal cube to the shared universe
+				universe.add(cube);
 
 		// Add a mouse interactor to the scene
 		mouseInteractor = new MouseInteractor(universe.getPresentation()

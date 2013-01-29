@@ -91,6 +91,7 @@ public class CObject implements IObject {
 		presentation.getTransform(t3d);
 		t3d.setRotation(abstraction.getOrientation());
 		t3d.setTranslation(abstraction.getPosition());
+		t3d.normalize();
 		presentation.setTransform(t3d);
 	}
 
